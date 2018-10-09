@@ -57,7 +57,8 @@ The original input image shape is `(160, 320, 3)`, which is normalized using a `
 
 #### 2. Attempts to reduce overfitting in the model
 
-To reduce overfitting, the model contains a dropout layer after the CNN layers (L81). In addition, the data is shuffled and augmented each epoch (L22), see the description of the augmentation pipeline in the .
+To reduce overfitting, the model contains a dropout layer after the CNN layers (L81). In addition, the data is shuffled and augmented each epoch (L22), see the description of the augmentation pipeline in the "Creation of the Training Set & Training Process" section.
+
 #### 3. Model parameter tuning
 
 The model used the `Adam` optimizer, which automatically tunes the learning rate (L92). To select the best model over the training epochs, the model uses `ModelCheckpoint` (L93), which saves the models with the lowest validation set loss.
