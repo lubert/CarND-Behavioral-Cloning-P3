@@ -29,23 +29,26 @@ def generator(samples, batch_size=32):
             images = []
             angles = []
             for batch_sample in batch_samples:
-                # Randomly select a camera
                 angle = float(batch_sample[3])
-                camera = np.random.randint(0, 3)
+                # If the angle is a "turn", bias for more extreme camera view
+                if angle > 0.15:
+                    camera = np.random.choice([0, 1])
+                elif angle < -0.15:
+                    camera = np.random.choice([0, 2])
+                else:
+                    camera = np.random.randint(0, 3)
+                correction = 0.25 # Steering correction factor
+                if camera == 1: # Left
+                    angle = angle + correction
+                elif camera == 2: # Right
+                    angle = angle - correction
                 name = img_path + batch_sample[camera].split('/')[-1]
                 image = cv2.imread(name)
                 # Convert to YUV, per NVIDIA architecture
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
-                correction = 0.2 # Steering correction factor
-                # Left
-                if camera == 1:
-                    angle = angle + correction
-                # Right
-                elif camera == 2:
-                    angle = angle - correction
                 # Randomly flip the image horizontally
-                flip = np.random.randint(0, 2)
-                if flip == 1:
+                flip = np.random.random()
+                if flip > 0.5:
                     image = np.fliplr(image)
                     angle = -angle
                 images.append(image)
